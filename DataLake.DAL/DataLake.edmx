@@ -1,0 +1,1594 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DataLakeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DataLake-Dev.config.Status' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="CodeTable" />
+            <PropertyRef Name="StatausCode" />
+          </Key>
+          <Property Name="CodeTable" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StatausCode" Type="int" Nullable="false" />
+          <Property Name="CodeShortDescription" Type="varchar" MaxLength="50" />
+          <Property Name="CodeDescription" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="WorkflowDefinition">
+          <Key>
+            <PropertyRef Name="WorkflowDefinitionID" />
+          </Key>
+          <Property Name="WorkflowDefinitionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="IsEnabled" Type="bit" Nullable="false" />
+          <Property Name="StartAfter" Type="datetime" />
+          <Property Name="EndBefore" Type="datetime" />
+          <Property Name="ScheduleJSON" Type="nvarchar(max)" />
+          <Property Name="IsSingleton" Type="bit" Nullable="false" />
+          <Property Name="IsScheduled" Type="bit" Nullable="false" />
+          <Property Name="WorkflowDefinitionGUID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WorkflowLog">
+          <Key>
+            <PropertyRef Name="WorkflowLogID" />
+          </Key>
+          <Property Name="WorkflowLogID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowRunID" Type="int" Nullable="false" />
+          <Property Name="WorkflowTaskID" Type="int" />
+          <Property Name="LogLevel" Type="int" Nullable="false" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="Timestamp" Type="datetime" Nullable="false" />
+          <Property Name="ExceptionType" Type="nvarchar" MaxLength="512" />
+          <Property Name="ExceptionJSON" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="WorkflowRun">
+          <Key>
+            <PropertyRef Name="WorkflowRunID" />
+          </Key>
+          <Property Name="WorkflowRunID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowDefinitionID" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StartedOn" Type="datetime" Nullable="false" />
+          <Property Name="CompletedOn" Type="datetime" />
+          <Property Name="HasErrors" Type="bit" Nullable="false" />
+          <Property Name="CutoffValue" Type="nvarchar(max)" />
+          <Property Name="CutoffDateTime" Type="datetime" />
+          <Property Name="RunGUID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WorkflowTask">
+          <Key>
+            <PropertyRef Name="WorkflowTaskID" />
+          </Key>
+          <Property Name="WorkflowTaskID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowDefinitionID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="512" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="StepNumber" Type="int" Nullable="false" />
+          <Property Name="TaskType" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsDisabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkflowTaskParameter">
+          <Key>
+            <PropertyRef Name="WorkflowTaskParameterID" />
+          </Key>
+          <Property Name="WorkflowTaskParameterID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowTaskID" Type="int" Nullable="false" />
+          <Property Name="ConfigurationKey" Type="nvarchar" MaxLength="50" />
+          <Property Name="ConfigurationValue" Type="nvarchar(max)" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DataLake-Dev.dbo.TableMetadata' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TableMetadata">
+          <Key>
+            <PropertyRef Name="MetadataKey" />
+            <PropertyRef Name="SchemaName" />
+            <PropertyRef Name="TableName" />
+            <PropertyRef Name="DataType" />
+            <PropertyRef Name="Length" />
+            <PropertyRef Name="Precision" />
+            <PropertyRef Name="Scale" />
+          </Key>
+          <Property Name="MetadataKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SchemaName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TableName" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="ColumnName" Type="varchar" MaxLength="150" />
+          <Property Name="DataType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Length" Type="int" Nullable="false" />
+          <Property Name="Precision" Type="int" Nullable="false" />
+          <Property Name="Scale" Type="int" Nullable="false" />
+          <Property Name="IsNullable" Type="int" />
+          <Property Name="ColumnDescription" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="USCoastalMarineZones">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="bigint" Nullable="false" />
+          <Property Name="ID" Type="nvarchar(max)" />
+          <Property Name="WFO" Type="nvarchar(max)" />
+          <Property Name="GL_WFO" Type="nvarchar(max)" />
+          <Property Name="LocationNAME" Type="nvarchar(max)" />
+          <Property Name="AJOIN0" Type="nvarchar(max)" />
+          <Property Name="AJOIN1" Type="nvarchar(max)" />
+          <Property Name="Longitude" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="Latitude" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeLength" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeArea" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="Geom" Type="geometry" />
+        </EntityType>
+        <EntityType Name="USStates">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="bigint" Nullable="false" />
+          <Property Name="STATE" Type="nvarchar(max)" />
+          <Property Name="STATENAME" Type="nvarchar(max)" />
+          <Property Name="FIPS" Type="nvarchar(max)" />
+          <Property Name="LONGITUDE" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="LATITUDE" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeLeng" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeArea" Type="decimal" Precision="30" Scale="10" />
+          <Property Name="Geom" Type="geometry" />
+        </EntityType>
+        <EntityType Name="USZipCodes">
+          <Key>
+            <PropertyRef Name="GEOID10" />
+          </Key>
+          <Property Name="ZCTA5CE10" Type="nvarchar(max)" />
+          <Property Name="AFFGEOID10" Type="nvarchar(max)" />
+          <Property Name="GEOID10" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="ZIPCODE" Type="nvarchar" MaxLength="50" />
+          <Property Name="ALAND10" Type="bigint" />
+          <Property Name="AWATER10" Type="bigint" />
+          <Property Name="Geom" Type="geometry" />
+        </EntityType>
+        <EntityType Name="DatasetLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DatasetName" Type="varchar" MaxLength="255" />
+          <Property Name="DatasetURL" Type="varchar" MaxLength="255" />
+          <Property Name="LastRunDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="IsComplete" Type="int" />
+          <Property Name="LogDescription" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="WeatherDataCategories">
+          <Key>
+            <PropertyRef Name="DataCatagoryId" />
+          </Key>
+          <Property Name="DataCatagoryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="nvarchar" MaxLength="200" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="WeatherDatasets">
+          <Key>
+            <PropertyRef Name="AllDatasetId" />
+          </Key>
+          <Property Name="AllDatasetId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Datatype" Type="nvarchar" MaxLength="100" />
+          <Property Name="stations" Type="nvarchar" MaxLength="255" />
+          <Property Name="attributes" Type="nvarchar(max)" />
+          <Property Name="value" Type="bigint" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="WeatherDatasetTypes">
+          <Key>
+            <PropertyRef Name="DatasetId" />
+          </Key>
+          <Property Name="DatasetId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="uid" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="mindate" Type="datetime" />
+          <Property Name="maxdate" Type="datetime" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="datacoverage" Type="nvarchar" MaxLength="100" />
+          <Property Name="id" Type="nvarchar" MaxLength="100" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="WeatherDataTypes">
+          <Key>
+            <PropertyRef Name="DataTypeId" />
+          </Key>
+          <Property Name="DataTypeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mindate" Type="datetime" />
+          <Property Name="maxdate" Type="datetime" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" />
+          <Property Name="datacoverage" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="nvarchar" MaxLength="100" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="WeatherLocationCategories">
+          <Key>
+            <PropertyRef Name="LocationCatagoryId" />
+          </Key>
+          <Property Name="LocationCatagoryId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="nvarchar" MaxLength="200" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" />
+          <Property Name="DataReference" Type="int" />
+          <Property Name="Checksumcheck" Type="int" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WeatherLocations">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mindate" Type="datetime" />
+          <Property Name="maxdate" Type="datetime" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" />
+          <Property Name="datacoverage" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="nvarchar" MaxLength="100" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="WeatherStations">
+          <Key>
+            <PropertyRef Name="StationId" />
+          </Key>
+          <Property Name="StationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="elevation" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="mindate" Type="datetime" />
+          <Property Name="maxdate" Type="datetime" />
+          <Property Name="latitude" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="name" Type="nvarchar" MaxLength="500" />
+          <Property Name="datacoverage" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="nvarchar" MaxLength="200" />
+          <Property Name="elevationUnit" Type="nvarchar" MaxLength="200" />
+          <Property Name="longitude" Type="decimal" Precision="20" Scale="10" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="FeatureGeoLocationInfo">
+          <Key>
+            <PropertyRef Name="GeoServeId" />
+          </Key>
+          <Property Name="GeoServeId" Type="int" Nullable="false" />
+          <Property Name="Distance" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Latitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="CityName" Type="varchar" MaxLength="255" />
+          <Property Name="Direction" Type="varchar" MaxLength="50" />
+          <Property Name="Population" Type="bigint" />
+          <Property Name="Datareference" Type="bigint" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DataLake-Dev.USGS.FeatureGeometryInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="FeatureGeometryInfo">
+          <Key>
+            <PropertyRef Name="IdentificationCode" />
+          </Key>
+          <Property Name="IdentificationCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Longitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Latitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Depth" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Type" Type="varchar" MaxLength="50" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="FeatureGeoServeInfo">
+          <Key>
+            <PropertyRef Name="GeoServeId" />
+          </Key>
+          <Property Name="GeoServeId" Type="int" Nullable="false" />
+          <Property Name="IdentificationCode" Type="varchar" MaxLength="50" />
+          <Property Name="Country" Type="varchar" MaxLength="255" />
+          <Property Name="State" Type="varchar" MaxLength="255" />
+          <Property Name="GeoServeCodeId" Type="varchar" MaxLength="255" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="FeatureInfo">
+          <Key>
+            <PropertyRef Name="IdentificationCode" />
+          </Key>
+          <Property Name="IdentificationCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Magnitude" Type="decimal" Precision="10" Scale="5" Nullable="false" />
+          <Property Name="Place" Type="varchar" MaxLength="250" />
+          <Property Name="TimeInMS" Type="bigint" Nullable="false" />
+          <Property Name="LastUpdatedInMS" Type="bigint" Nullable="false" />
+          <Property Name="EventDateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastUpdatedDateTime" Type="datetime" Nullable="false" />
+          <Property Name="TimeZoneOffset" Type="int" Nullable="false" />
+          <Property Name="Detail" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="ComputedFeltIntesity" Type="int" />
+          <Property Name="NumOfFeltReported" Type="int" />
+          <Property Name="MaxInstrumentalIntesity" Type="int" />
+          <Property Name="TsunamiFlag" Type="smallint" />
+          <Property Name="Significancy" Type="smallint" />
+          <Property Name="PreferredSourceNetworkId" Type="varchar" MaxLength="255" />
+          <Property Name="CommaSeparatedSourceNetworkIds" Type="varchar" MaxLength="255" />
+          <Property Name="CommaSeparatedProductTypes" Type="varchar" MaxLength="255" />
+          <Property Name="NumOfSeismicStations" Type="int" />
+          <Property Name="HorizontalDistance" Type="float" />
+          <Property Name="RmsTravelTime" Type="float" />
+          <Property Name="Title" Type="varchar" MaxLength="255" />
+          <Property Name="TypeOfSeismicEvent" Type="varchar" MaxLength="255" />
+          <Property Name="HumanReviewedStatus" Type="varchar" MaxLength="50" />
+          <Property Name="USGEventPageUrl" Type="varchar" MaxLength="255" />
+          <Property Name="AlertLevel" Type="varchar" MaxLength="50" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <EntityType Name="SummaryInfo">
+          <Key>
+            <PropertyRef Name="SummaryId" />
+          </Key>
+          <Property Name="SummaryId" Type="int" Nullable="false" />
+          <Property Name="FromDateTime" Type="datetime" Nullable="false" />
+          <Property Name="ToDateTime" Type="datetime" Nullable="false" />
+          <Property Name="DataLoaded" Type="bit" />
+          <Property Name="DataReference" Type="int" />
+        </EntityType>
+        <Function Name="GetWorkFlowServiceURL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="GUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetWorkFlowURLParameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="GUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspGetLogParameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="workflowDefinationID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetMasterData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config" />
+        <Function Name="uspGetWorkflowLogData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="workflowDefinitionId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="uspGetWorkFlowParameter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="GUID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspGetWorkflowRunData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config" />
+        <Function Name="uspInsertWorkflowLog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="workflowRunID" Type="int" Mode="In" />
+          <Parameter Name="workflowTaskID" Type="int" Mode="In" />
+          <Parameter Name="logLevel" Type="int" Mode="In" />
+          <Parameter Name="message" Type="nvarchar" Mode="In" />
+          <Parameter Name="timestamp" Type="datetime" Mode="In" />
+          <Parameter Name="exceptionType" Type="nvarchar" Mode="In" />
+          <Parameter Name="exceptionJSON" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWorkflowRun" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="WorkflowDefinitionID" Type="int" Mode="In" />
+          <Parameter Name="Status" Type="int" Mode="In" />
+          <Parameter Name="StartedOn" Type="datetime" Mode="In" />
+          <Parameter Name="CompletedOn" Type="datetime" Mode="In" />
+          <Parameter Name="HasErrors" Type="bit" Mode="In" />
+          <Parameter Name="CutoffValue" Type="nvarchar" Mode="In" />
+          <Parameter Name="CutoffDateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="uspUpdateWorkflowRun" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="config">
+          <Parameter Name="workflowDefinitionID" Type="int" Mode="In" />
+          <Parameter Name="CompletedOn" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="GetmaxGeoServeId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="uspInsertDatalog" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="log">
+          <Parameter Name="dataset" Type="varchar" Mode="In" />
+          <Parameter Name="datsetUrl" Type="varchar" Mode="In" />
+          <Parameter Name="lastrundate" Type="datetime" Mode="In" />
+          <Parameter Name="createddate" Type="datetime" Mode="In" />
+          <Parameter Name="Iscomplete" Type="bit" Mode="In" />
+          <Parameter Name="DataLakeLogDescription" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspGetallStormdatasets" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA" />
+        <Function Name="uspGetlastrundate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="dataset" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWarningData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="WARNINGTYPE" Type="varchar" Mode="In" />
+          <Parameter Name="MESSAGEID" Type="varchar" Mode="In" />
+          <Parameter Name="SHAPE" Type="geography" Mode="In" />
+          <Parameter Name="ZTIME_END" Type="datetime" Mode="In" />
+          <Parameter Name="ZTIME_START" Type="datetime" Mode="In" />
+          <Parameter Name="ID" Type="varchar" Mode="In" />
+          <Parameter Name="ISSUEWFO" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherDataCategoriesData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherDatasetsData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="date" Type="datetime" Mode="In" />
+          <Parameter Name="datatype" Type="nvarchar" Mode="In" />
+          <Parameter Name="stations" Type="nvarchar" Mode="In" />
+          <Parameter Name="attributes" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="value" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherDatasetTypesData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="uid" Type="nvarchar" Mode="In" />
+          <Parameter Name="mindate" Type="datetime" Mode="In" />
+          <Parameter Name="maxdate" Type="datetime" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+          <Parameter Name="datacoverage" Type="nvarchar" Mode="In" />
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherDataTypesData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="mindate" Type="datetime" Mode="In" />
+          <Parameter Name="maxdate" Type="datetime" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+          <Parameter Name="datacoverage" Type="decimal" Mode="In" />
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherLocationCategoriesData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherLocationsData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="mindate" Type="datetime" Mode="In" />
+          <Parameter Name="maxdate" Type="datetime" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+          <Parameter Name="datacoverage" Type="decimal" Mode="In" />
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertWeatherStationsData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="NOAA">
+          <Parameter Name="elevation" Type="decimal" Mode="In" />
+          <Parameter Name="mindate" Type="datetime" Mode="In" />
+          <Parameter Name="maxdate" Type="datetime" Mode="In" />
+          <Parameter Name="latitude" Type="decimal" Mode="In" />
+          <Parameter Name="name" Type="nvarchar" Mode="In" />
+          <Parameter Name="datacoverage" Type="decimal" Mode="In" />
+          <Parameter Name="id" Type="nvarchar" Mode="In" />
+          <Parameter Name="elevationUnit" Type="nvarchar" Mode="In" />
+          <Parameter Name="longitude" Type="decimal" Mode="In" />
+        </Function>
+        <Function Name="GetmaxGeoServeIdlOCATION" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="USGS" />
+        <Function Name="uspinsertFeatureGeoLocationInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="USGS">
+          <Parameter Name="GeoServeId" Type="int" Mode="In" />
+          <Parameter Name="Distance" Type="decimal" Mode="In" />
+          <Parameter Name="Latitude" Type="decimal" Mode="In" />
+          <Parameter Name="Longitude" Type="decimal" Mode="In" />
+          <Parameter Name="CityName" Type="varchar" Mode="In" />
+          <Parameter Name="Direction" Type="varchar" Mode="In" />
+          <Parameter Name="Population" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="uspinsertfeaturegeometryinfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="USGS">
+          <Parameter Name="IdentificationCode" Type="varchar" Mode="In" />
+          <Parameter Name="Longitude" Type="decimal" Mode="In" />
+          <Parameter Name="Latitude" Type="decimal" Mode="In" />
+          <Parameter Name="Depth" Type="decimal" Mode="In" />
+          <Parameter Name="Type" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspinsertFeatureGeoServeInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="USGS">
+          <Parameter Name="GeoServeId" Type="int" Mode="In" />
+          <Parameter Name="IdentificationCode" Type="varchar" Mode="In" />
+          <Parameter Name="Country" Type="varchar" Mode="In" />
+          <Parameter Name="State" Type="varchar" Mode="In" />
+          <Parameter Name="GeoServeCodeId" Type="varchar" Mode="In" />
+          <Parameter Name="OId" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="uspinsertfeatureinfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="USGS">
+          <Parameter Name="IdentificationCode" Type="varchar" Mode="In" />
+          <Parameter Name="Magnitude" Type="decimal" Mode="In" />
+          <Parameter Name="Place" Type="varchar" Mode="In" />
+          <Parameter Name="TimeInMS" Type="bigint" Mode="In" />
+          <Parameter Name="LastUpdatedInMS" Type="bigint" Mode="In" />
+          <Parameter Name="EventDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="LastUpdatedDateTime" Type="datetime" Mode="In" />
+          <Parameter Name="TimeZoneOffset" Type="int" Mode="In" />
+          <Parameter Name="Detail" Type="varchar" Mode="In" />
+          <Parameter Name="ComputedFeltIntesity" Type="int" Mode="In" />
+          <Parameter Name="NumOfFeltReported" Type="int" Mode="In" />
+          <Parameter Name="MaxInstrumentalIntesity" Type="int" Mode="In" />
+          <Parameter Name="AlertLevel" Type="varchar" Mode="In" />
+          <Parameter Name="TsunamiFlag" Type="smallint" Mode="In" />
+          <Parameter Name="Significancy" Type="smallint" Mode="In" />
+          <Parameter Name="PreferredSourceNetworkId" Type="varchar" Mode="In" />
+          <Parameter Name="CommaSeparatedSourceNetworkIds" Type="varchar" Mode="In" />
+          <Parameter Name="CommaSeparatedProductTypes" Type="varchar" Mode="In" />
+          <Parameter Name="NumOfSeismicStations" Type="int" Mode="In" />
+          <Parameter Name="HorizontalDistance" Type="float" Mode="In" />
+          <Parameter Name="RmsTravelTime" Type="float" Mode="In" />
+          <Parameter Name="Title" Type="varchar" Mode="In" />
+          <Parameter Name="TypeOfSeismicEvent" Type="varchar" Mode="In" />
+          <Parameter Name="HumanReviewedStatus" Type="varchar" Mode="In" />
+          <Parameter Name="USGEventPageUrl" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="DataLakeModelStoreContainer">
+          <EntitySet Name="WorkflowDefinition" EntityType="Self.WorkflowDefinition" Schema="config" store:Type="Tables" />
+          <EntitySet Name="WorkflowLog" EntityType="Self.WorkflowLog" Schema="config" store:Type="Tables" />
+          <EntitySet Name="WorkflowRun" EntityType="Self.WorkflowRun" Schema="config" store:Type="Tables" />
+          <EntitySet Name="WorkflowTask" EntityType="Self.WorkflowTask" Schema="config" store:Type="Tables" />
+          <EntitySet Name="WorkflowTaskParameter" EntityType="Self.WorkflowTaskParameter" Schema="config" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USCoastalMarineZones" EntityType="Self.USCoastalMarineZones" Schema="GEO" store:Type="Tables" />
+          <EntitySet Name="USStates" EntityType="Self.USStates" Schema="GEO" store:Type="Tables" />
+          <EntitySet Name="USZipCodes" EntityType="Self.USZipCodes" Schema="GEO" store:Type="Tables" />
+          <EntitySet Name="DatasetLog" EntityType="Self.DatasetLog" Schema="log" store:Type="Tables" />
+          <EntitySet Name="WeatherDataCategories" EntityType="Self.WeatherDataCategories" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherDatasets" EntityType="Self.WeatherDatasets" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherDatasetTypes" EntityType="Self.WeatherDatasetTypes" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherDataTypes" EntityType="Self.WeatherDataTypes" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherLocationCategories" EntityType="Self.WeatherLocationCategories" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherLocations" EntityType="Self.WeatherLocations" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="WeatherStations" EntityType="Self.WeatherStations" Schema="NOAA" store:Type="Tables" />
+          <EntitySet Name="FeatureGeoLocationInfo" EntityType="Self.FeatureGeoLocationInfo" Schema="USGS" store:Type="Tables" />
+          <EntitySet Name="FeatureGeoServeInfo" EntityType="Self.FeatureGeoServeInfo" Schema="USGS" store:Type="Tables" />
+          <EntitySet Name="FeatureInfo" EntityType="Self.FeatureInfo" Schema="USGS" store:Type="Tables" />
+          <EntitySet Name="SummaryInfo" EntityType="Self.SummaryInfo" Schema="USGS" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" store:Type="Tables" store:Schema="config">
+            <DefiningQuery>SELECT 
+    [Status].[CodeTable] AS [CodeTable], 
+    [Status].[StatausCode] AS [StatausCode], 
+    [Status].[CodeShortDescription] AS [CodeShortDescription], 
+    [Status].[CodeDescription] AS [CodeDescription]
+    FROM [config].[Status] AS [Status]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TableMetadata" EntityType="Self.TableMetadata" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TableMetadata].[MetadataKey] AS [MetadataKey], 
+    [TableMetadata].[SchemaName] AS [SchemaName], 
+    [TableMetadata].[TableName] AS [TableName], 
+    [TableMetadata].[ColumnName] AS [ColumnName], 
+    [TableMetadata].[DataType] AS [DataType], 
+    [TableMetadata].[Length] AS [Length], 
+    [TableMetadata].[Precision] AS [Precision], 
+    [TableMetadata].[Scale] AS [Scale], 
+    [TableMetadata].[IsNullable] AS [IsNullable], 
+    [TableMetadata].[ColumnDescription] AS [ColumnDescription]
+    FROM [dbo].[TableMetadata] AS [TableMetadata]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="FeatureGeometryInfo" EntityType="Self.FeatureGeometryInfo" store:Type="Tables" store:Schema="USGS">
+            <DefiningQuery>SELECT 
+    [FeatureGeometryInfo].[IdentificationCode] AS [IdentificationCode], 
+    [FeatureGeometryInfo].[Longitude] AS [Longitude], 
+    [FeatureGeometryInfo].[Latitude] AS [Latitude], 
+    [FeatureGeometryInfo].[Depth] AS [Depth], 
+    [FeatureGeometryInfo].[Type] AS [Type], 
+    [FeatureGeometryInfo].[DataReference] AS [DataReference]
+    FROM [USGS].[FeatureGeometryInfo] AS [FeatureGeometryInfo]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DataLakeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DataLakeEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="uspInsertWeatherDataCategoriesData">
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWeatherDatasetsData">
+            <Parameter Name="date" Mode="In" Type="DateTime" />
+            <Parameter Name="datatype" Mode="In" Type="String" />
+            <Parameter Name="stations" Mode="In" Type="String" />
+            <Parameter Name="attributes" Mode="In" Type="String" />
+            <Parameter Name="value" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWeatherDataTypesData">
+            <Parameter Name="mindate" Mode="In" Type="DateTime" />
+            <Parameter Name="maxdate" Mode="In" Type="DateTime" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="datacoverage" Mode="In" Type="Decimal" />
+            <Parameter Name="id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWeatherLocationsData">
+            <Parameter Name="mindate" Mode="In" Type="DateTime" />
+            <Parameter Name="maxdate" Mode="In" Type="DateTime" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="datacoverage" Mode="In" Type="Decimal" />
+            <Parameter Name="id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWeatherStationsData">
+            <Parameter Name="elevation" Mode="In" Type="Decimal" />
+            <Parameter Name="mindate" Mode="In" Type="DateTime" />
+            <Parameter Name="maxdate" Mode="In" Type="DateTime" />
+            <Parameter Name="latitude" Mode="In" Type="Decimal" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="datacoverage" Mode="In" Type="Decimal" />
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="elevationUnit" Mode="In" Type="String" />
+            <Parameter Name="longitude" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetlastrundate" ReturnType="Collection(DateTime)">
+          <Parameter Name="dataset" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="USCoastalMarineZones" EntityType="DataLakeModel.USCoastalMarineZone" />
+          <EntitySet Name="USStates" EntityType="DataLakeModel.USState" />
+          <EntitySet Name="USZipCodes" EntityType="DataLakeModel.USZipCode" />
+          <EntitySet Name="DatasetLogs" EntityType="DataLakeModel.DatasetLog" />
+          <EntitySet Name="WeatherDataCategories" EntityType="DataLakeModel.WeatherDataCategory" />
+          <EntitySet Name="WeatherDatasets" EntityType="DataLakeModel.WeatherDataset" />
+          <EntitySet Name="WeatherDatasetTypes" EntityType="DataLakeModel.WeatherDatasetType" />
+          <EntitySet Name="WeatherDataTypes" EntityType="DataLakeModel.WeatherDataType" />
+          <EntitySet Name="WeatherLocationCategories" EntityType="DataLakeModel.WeatherLocationCategory" />
+          <EntitySet Name="WeatherLocations" EntityType="DataLakeModel.WeatherLocation" />
+          <EntitySet Name="WeatherStations" EntityType="DataLakeModel.WeatherStation" />
+          <EntitySet Name="FeatureGeoLocationInfoes" EntityType="DataLakeModel.FeatureGeoLocationInfo" />
+          <EntitySet Name="FeatureGeoServeInfoes" EntityType="DataLakeModel.FeatureGeoServeInfo" />
+          <EntitySet Name="FeatureInfoes" EntityType="DataLakeModel.FeatureInfo" />
+          <EntitySet Name="SummaryInfoes" EntityType="DataLakeModel.SummaryInfo" />
+          <EntitySet Name="FeatureGeometryInfoes" EntityType="DataLakeModel.FeatureGeometryInfo" />
+          <FunctionImport Name="uspInsertWeatherDatasetTypesData">
+            <Parameter Name="uid" Mode="In" Type="String" />
+            <Parameter Name="mindate" Mode="In" Type="DateTime" />
+            <Parameter Name="maxdate" Mode="In" Type="DateTime" />
+            <Parameter Name="name" Mode="In" Type="String" />
+            <Parameter Name="datacoverage" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWeatherLocationCategoriesData">
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertDatalog">
+            <Parameter Name="dataset" Mode="In" Type="String" />
+            <Parameter Name="datsetUrl" Mode="In" Type="String" />
+            <Parameter Name="lastrundate" Mode="In" Type="DateTime" />
+            <Parameter Name="createddate" Mode="In" Type="DateTime" />
+            <Parameter Name="Iscomplete" Mode="In" Type="Boolean" />
+            <Parameter Name="DataLakeLogDescription" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetallStormdatasets" ReturnType="Collection(String)" />
+          <FunctionImport Name="uspInsertWarningData">
+            <Parameter Name="WARNINGTYPE" Mode="In" Type="String" />
+            <Parameter Name="MESSAGEID" Mode="In" Type="String" />
+            <Parameter Name="SHAPE" Mode="In" Type="Geography" />
+            <Parameter Name="ZTIME_END" Mode="In" Type="DateTime" />
+            <Parameter Name="ZTIME_START" Mode="In" Type="DateTime" />
+            <Parameter Name="ID" Mode="In" Type="String" />
+            <Parameter Name="ISSUEWFO" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspinsertFeatureGeoLocationInfo">
+            <Parameter Name="GeoServeId" Mode="In" Type="Int32" />
+            <Parameter Name="Distance" Mode="In" Type="Decimal" />
+            <Parameter Name="Latitude" Mode="In" Type="Decimal" />
+            <Parameter Name="Longitude" Mode="In" Type="Decimal" />
+            <Parameter Name="CityName" Mode="In" Type="String" />
+            <Parameter Name="Direction" Mode="In" Type="String" />
+            <Parameter Name="Population" Mode="In" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="uspinsertfeaturegeometryinfo">
+            <Parameter Name="IdentificationCode" Mode="In" Type="String" />
+            <Parameter Name="Longitude" Mode="In" Type="Decimal" />
+            <Parameter Name="Latitude" Mode="In" Type="Decimal" />
+            <Parameter Name="Depth" Mode="In" Type="Decimal" />
+            <Parameter Name="Type" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspinsertFeatureGeoServeInfo">
+            <Parameter Name="GeoServeId" Mode="In" Type="Int32" />
+            <Parameter Name="IdentificationCode" Mode="In" Type="String" />
+            <Parameter Name="Country" Mode="In" Type="String" />
+            <Parameter Name="State" Mode="In" Type="String" />
+            <Parameter Name="GeoServeCodeId" Mode="In" Type="String" />
+            <Parameter Name="OId" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspinsertfeatureinfo">
+            <Parameter Name="IdentificationCode" Mode="In" Type="String" />
+            <Parameter Name="Magnitude" Mode="In" Type="Decimal" />
+            <Parameter Name="Place" Mode="In" Type="String" />
+            <Parameter Name="TimeInMS" Mode="In" Type="Int64" />
+            <Parameter Name="LastUpdatedInMS" Mode="In" Type="Int64" />
+            <Parameter Name="EventDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="LastUpdatedDateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="TimeZoneOffset" Mode="In" Type="Int32" />
+            <Parameter Name="Detail" Mode="In" Type="String" />
+            <Parameter Name="ComputedFeltIntesity" Mode="In" Type="Int32" />
+            <Parameter Name="NumOfFeltReported" Mode="In" Type="Int32" />
+            <Parameter Name="MaxInstrumentalIntesity" Mode="In" Type="Int32" />
+            <Parameter Name="AlertLevel" Mode="In" Type="String" />
+            <Parameter Name="TsunamiFlag" Mode="In" Type="Int16" />
+            <Parameter Name="Significancy" Mode="In" Type="Int16" />
+            <Parameter Name="PreferredSourceNetworkId" Mode="In" Type="String" />
+            <Parameter Name="CommaSeparatedSourceNetworkIds" Mode="In" Type="String" />
+            <Parameter Name="CommaSeparatedProductTypes" Mode="In" Type="String" />
+            <Parameter Name="NumOfSeismicStations" Mode="In" Type="Int32" />
+            <Parameter Name="HorizontalDistance" Mode="In" Type="Double" />
+            <Parameter Name="RmsTravelTime" Mode="In" Type="Double" />
+            <Parameter Name="Title" Mode="In" Type="String" />
+            <Parameter Name="TypeOfSeismicEvent" Mode="In" Type="String" />
+            <Parameter Name="HumanReviewedStatus" Mode="In" Type="String" />
+            <Parameter Name="USGEventPageUrl" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetmaxGeoServeId" ReturnType="Collection(Int32)" />
+          <FunctionImport Name="GetmaxGeoServeIdlOCATION" ReturnType="Collection(Int32)" />
+          <FunctionImport Name="uspInsertWorkflowRun">
+            <Parameter Name="WorkflowDefinitionID" Mode="In" Type="Int32" />
+            <Parameter Name="Status" Mode="In" Type="Int32" />
+            <Parameter Name="StartedOn" Mode="In" Type="DateTime" />
+            <Parameter Name="CompletedOn" Mode="In" Type="DateTime" />
+            <Parameter Name="HasErrors" Mode="In" Type="Boolean" />
+            <Parameter Name="CutoffValue" Mode="In" Type="String" />
+            <Parameter Name="CutoffDateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetWorkFlowIDS" ReturnType="Collection(DataLakeModel.uspGetWorkFlowIDS_Result)">
+          <Parameter Name="GUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertWorkflowLog">
+            <Parameter Name="workflowRunID" Mode="In" Type="Int32" />
+            <Parameter Name="workflowTaskID" Mode="In" Type="Int32" />
+            <Parameter Name="logLevel" Mode="In" Type="Int32" />
+            <Parameter Name="message" Mode="In" Type="String" />
+            <Parameter Name="timestamp" Mode="In" Type="DateTime" />
+            <Parameter Name="exceptionType" Mode="In" Type="String" />
+            <Parameter Name="exceptionJSON" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetWorkFlowRunID" ReturnType="Collection(Int32)">
+          <Parameter Name="workflowDefinationID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspUpdateWorkflowRun">
+            <Parameter Name="workflowDefinitionID" Mode="In" Type="Int32" />
+            <Parameter Name="CompletedOn" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetLogParameter" ReturnType="Collection(DataLakeModel.uspGetLogParameter_Result)">
+          <Parameter Name="workflowDefinationID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetWorkFlowParameter" ReturnType="Collection(DataLakeModel.uspGetWorkFlowParameter_Result)">
+          <Parameter Name="GUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="WorkflowDefinitions" EntityType="DataLakeModel.WorkflowDefinition" />
+          <EntitySet Name="WorkflowLogs" EntityType="DataLakeModel.WorkflowLog" />
+          <EntitySet Name="WorkflowRuns" EntityType="DataLakeModel.WorkflowRun" />
+          <EntitySet Name="WorkflowTasks" EntityType="DataLakeModel.WorkflowTask" />
+          <EntitySet Name="WorkflowTaskParameters" EntityType="DataLakeModel.WorkflowTaskParameter" />
+          <EntitySet Name="sysdiagrams" EntityType="DataLakeModel.sysdiagram" />
+          <EntitySet Name="Status" EntityType="DataLakeModel.Status" />
+          <EntitySet Name="TableMetadatas" EntityType="DataLakeModel.TableMetadata" />
+          <FunctionImport Name="GetWorkFlowServiceURL" ReturnType="Collection(DataLakeModel.GetWorkFlowServiceURL_Result2)">
+          <Parameter Name="GUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetWorkFlowURLParameter" ReturnType="Collection(DataLakeModel.GetWorkFlowURLParameter_Result)">
+          <Parameter Name="GUID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetMasterData" ReturnType="Collection(DataLakeModel.uspGetMasterData_Result)" />
+          <FunctionImport Name="uspGetWorkflowRunData" ReturnType="Collection(DataLakeModel.uspGetWorkflowRunData_Result)" />
+          <FunctionImport Name="uspGetWorkflowLogData" ReturnType="Collection(DataLakeModel.uspGetWorkflowLogData_Result)">
+            <Parameter Name="workflowDefinitionId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="USCoastalMarineZone">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int64" Nullable="false" />
+          <Property Name="ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="WFO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GL_WFO" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LocationNAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AJOIN0" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AJOIN1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Longitude" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="Latitude" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeLength" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeArea" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="Geom" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="USState">
+          <Key>
+            <PropertyRef Name="OBJECTID" />
+          </Key>
+          <Property Name="OBJECTID" Type="Int64" Nullable="false" />
+          <Property Name="STATE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="STATENAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FIPS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LONGITUDE" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="LATITUDE" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeLeng" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="ShapeArea" Type="Decimal" Precision="30" Scale="10" />
+          <Property Name="Geom" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="USZipCode">
+          <Key>
+            <PropertyRef Name="GEOID10" />
+          </Key>
+          <Property Name="ZCTA5CE10" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AFFGEOID10" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GEOID10" Type="String" Nullable="false" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="ZIPCODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ALAND10" Type="Int64" />
+          <Property Name="AWATER10" Type="Int64" />
+          <Property Name="Geom" Type="Geometry" />
+        </EntityType>
+        <EntityType Name="DatasetLog">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DatasetName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="DatasetURL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="LastRunDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsComplete" Type="Int32" />
+          <Property Name="LogDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="WeatherDataCategory">
+          <Key>
+            <PropertyRef Name="DataCatagoryId" />
+          </Key>
+          <Property Name="DataCatagoryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DataReference" Type="Int32" />
+          <Property Name="Checksumcheck" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WeatherDataset">
+          <Key>
+            <PropertyRef Name="AllDatasetId" />
+          </Key>
+          <Property Name="AllDatasetId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Datatype" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="stations" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="attributes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="value" Type="Int64" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <EntityType Name="WeatherDatasetType">
+          <Key>
+            <PropertyRef Name="DatasetId" />
+          </Key>
+          <Property Name="DatasetId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="uid" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mindate" Type="DateTime" Precision="3" />
+          <Property Name="maxdate" Type="DateTime" Precision="3" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="datacoverage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <EntityType Name="WeatherDataType">
+          <Key>
+            <PropertyRef Name="DataTypeId" />
+          </Key>
+          <Property Name="DataTypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mindate" Type="DateTime" Precision="3" />
+          <Property Name="maxdate" Type="DateTime" Precision="3" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="datacoverage" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataReference" Type="Int32" />
+          <Property Name="Checksumcheck" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WeatherLocationCategory">
+          <Key>
+            <PropertyRef Name="LocationCatagoryId" />
+          </Key>
+          <Property Name="LocationCatagoryId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DataReference" Type="Int32" />
+          <Property Name="Checksumcheck" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WeatherLocation">
+          <Key>
+            <PropertyRef Name="LocationId" />
+          </Key>
+          <Property Name="LocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mindate" Type="DateTime" Precision="3" />
+          <Property Name="maxdate" Type="DateTime" Precision="3" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="datacoverage" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DataReference" Type="Int32" />
+          <Property Name="Checksumcheck" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WeatherStation">
+          <Key>
+            <PropertyRef Name="StationId" />
+          </Key>
+          <Property Name="StationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="elevation" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="mindate" Type="DateTime" Precision="3" />
+          <Property Name="maxdate" Type="DateTime" Precision="3" />
+          <Property Name="latitude" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="datacoverage" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="id" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="elevationUnit" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="longitude" Type="Decimal" Precision="20" Scale="10" />
+          <Property Name="DataReference" Type="Int32" />
+          <Property Name="Checksumcheck" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="FeatureGeoLocationInfo">
+          <Key>
+            <PropertyRef Name="GeoServeId" />
+          </Key>
+          <Property Name="GeoServeId" Type="Int32" Nullable="false" />
+          <Property Name="Distance" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="CityName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Direction" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Population" Type="Int64" />
+          <Property Name="Datareference" Type="Int64" />
+        </EntityType>
+        <EntityType Name="FeatureGeoServeInfo">
+          <Key>
+            <PropertyRef Name="GeoServeId" />
+          </Key>
+          <Property Name="GeoServeId" Type="Int32" Nullable="false" />
+          <Property Name="IdentificationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="GeoServeCodeId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <EntityType Name="FeatureInfo">
+          <Key>
+            <PropertyRef Name="IdentificationCode" />
+          </Key>
+          <Property Name="IdentificationCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Magnitude" Type="Decimal" Nullable="false" Precision="10" Scale="5" />
+          <Property Name="Place" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="TimeInMS" Type="Int64" Nullable="false" />
+          <Property Name="LastUpdatedInMS" Type="Int64" Nullable="false" />
+          <Property Name="EventDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastUpdatedDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TimeZoneOffset" Type="Int32" Nullable="false" />
+          <Property Name="Detail" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ComputedFeltIntesity" Type="Int32" />
+          <Property Name="NumOfFeltReported" Type="Int32" />
+          <Property Name="MaxInstrumentalIntesity" Type="Int32" />
+          <Property Name="TsunamiFlag" Type="Int16" />
+          <Property Name="Significancy" Type="Int16" />
+          <Property Name="PreferredSourceNetworkId" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CommaSeparatedSourceNetworkIds" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CommaSeparatedProductTypes" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NumOfSeismicStations" Type="Int32" />
+          <Property Name="HorizontalDistance" Type="Double" />
+          <Property Name="RmsTravelTime" Type="Double" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="TypeOfSeismicEvent" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="HumanReviewedStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USGEventPageUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="AlertLevel" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <EntityType Name="SummaryInfo">
+          <Key>
+            <PropertyRef Name="SummaryId" />
+          </Key>
+          <Property Name="SummaryId" Type="Int32" Nullable="false" />
+          <Property Name="FromDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ToDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DataLoaded" Type="Boolean" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <EntityType Name="FeatureGeometryInfo">
+          <Key>
+            <PropertyRef Name="IdentificationCode" />
+          </Key>
+          <Property Name="IdentificationCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Depth" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DataReference" Type="Int32" />
+        </EntityType>
+        <ComplexType Name="uspGetallStormdatasets_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="String" Name="Datasetname" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="Isfetch" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspGetWorkFlowURL_Result">
+          <Property Type="String" Name="ServiceURL" Nullable="true" />
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinationID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="uspGetWorkFlowIDS_Result">
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinationID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetWorkFlowServiceURL_Result">
+          <Property Type="String" Name="ServiceURL" Nullable="true" />
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinationID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="uspGetLogParameter_Result">
+          <Property Type="Int32" Name="WorkFlowRunID" Nullable="true" />
+          <Property Type="Int32" Name="WorkflowTaskID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspGetWorkFlowParameter_Result">
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinationID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetWorkFlowServiceURL_Result1">
+          <Property Type="String" Name="ServiceURL" Nullable="true" />
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinitionID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="WorkflowDefinition">
+          <Key>
+            <PropertyRef Name="WorkflowDefinitionID" />
+          </Key>
+          <Property Name="WorkflowDefinitionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="IsEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="StartAfter" Type="DateTime" Precision="3" />
+          <Property Name="EndBefore" Type="DateTime" Precision="3" />
+          <Property Name="ScheduleJSON" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsSingleton" Type="Boolean" Nullable="false" />
+          <Property Name="IsScheduled" Type="Boolean" Nullable="false" />
+          <Property Name="WorkflowDefinitionGUID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WorkflowLog">
+          <Key>
+            <PropertyRef Name="WorkflowLogID" />
+          </Key>
+          <Property Name="WorkflowLogID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowRunID" Type="Int32" Nullable="false" />
+          <Property Name="WorkflowTaskID" Type="Int32" />
+          <Property Name="LogLevel" Type="Int32" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ExceptionType" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionJSON" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WorkflowRun">
+          <Key>
+            <PropertyRef Name="WorkflowRunID" />
+          </Key>
+          <Property Name="WorkflowRunID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowDefinitionID" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="StartedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CompletedOn" Type="DateTime" Precision="3" />
+          <Property Name="HasErrors" Type="Boolean" Nullable="false" />
+          <Property Name="CutoffValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CutoffDateTime" Type="DateTime" Precision="3" />
+          <Property Name="RunGUID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WorkflowTask">
+          <Key>
+            <PropertyRef Name="WorkflowTaskID" />
+          </Key>
+          <Property Name="WorkflowTaskID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowDefinitionID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StepNumber" Type="Int32" Nullable="false" />
+          <Property Name="TaskType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsDisabled" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkflowTaskParameter">
+          <Key>
+            <PropertyRef Name="WorkflowTaskParameterID" />
+          </Key>
+          <Property Name="WorkflowTaskParameterID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowTaskID" Type="Int32" Nullable="false" />
+          <Property Name="ConfigurationKey" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ConfigurationValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="CodeTable" />
+            <PropertyRef Name="StatausCode" />
+          </Key>
+          <Property Name="CodeTable" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StatausCode" Type="Int32" Nullable="false" />
+          <Property Name="CodeShortDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodeDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TableMetadata">
+          <Key>
+            <PropertyRef Name="MetadataKey" />
+            <PropertyRef Name="SchemaName" />
+            <PropertyRef Name="TableName" />
+            <PropertyRef Name="DataType" />
+            <PropertyRef Name="Length" />
+            <PropertyRef Name="Precision" />
+            <PropertyRef Name="Scale" />
+          </Key>
+          <Property Name="MetadataKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SchemaName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TableName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ColumnName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="DataType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Length" Type="Int32" Nullable="false" />
+          <Property Name="Precision" Type="Int32" Nullable="false" />
+          <Property Name="Scale" Type="Int32" Nullable="false" />
+          <Property Name="IsNullable" Type="Int32" />
+          <Property Name="ColumnDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="GetWorkFlowServiceURL_Result2">
+          <Property Type="String" Name="ServiceURL" Nullable="true" />
+          <Property Type="String" Name="WorkflowTaskId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="WorkflowDefinitionID" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetWorkFlowURLParameter_Result">
+          <Property Type="String" Name="ConfigurationKey" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ConfigurationValue" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspInsertWorkflowLogData_Result">
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="Name1" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="CodeShortDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Message" Nullable="true" />
+          <Property Type="DateTime" Name="Timestamp" Nullable="false" Precision="23" />
+          <Property Type="String" Name="ExceptionType" Nullable="true" MaxLength="512" />
+          <Property Type="String" Name="ExceptionJSON" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="uspGetMasterData_Result">
+          <Property Type="Int32" Name="WorkflowDefinitionID" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="512" />
+        </ComplexType>
+        <ComplexType Name="uspGetWorkflowRunData_Result">
+          <Property Type="String" Name="CodeShortDescription" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="Startedon" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="CompletedOn" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="HasErrors" Nullable="false" />
+          <Property Type="DateTime" Name="CutoffDateTime" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="uspGetWorkflowLogData_Result">
+          <Property Type="String" Name="CodeShortDescription" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Message" Nullable="true" />
+          <Property Type="String" Name="Timestamp" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="ExceptionType" Nullable="false" MaxLength="512" />
+          <Property Type="String" Name="ExceptionJSON" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DataLakeModelStoreContainer" CdmEntityContainer="DataLakeEntities">
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherDataCategoriesData" FunctionName="DataLakeModel.Store.uspInsertWeatherDataCategoriesData" />
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherDatasetsData" FunctionName="DataLakeModel.Store.uspInsertWeatherDatasetsData" />
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherDataTypesData" FunctionName="DataLakeModel.Store.uspInsertWeatherDataTypesData" />
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherLocationsData" FunctionName="DataLakeModel.Store.uspInsertWeatherLocationsData" />
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherStationsData" FunctionName="DataLakeModel.Store.uspInsertWeatherStationsData" />
+          <FunctionImportMapping FunctionImportName="uspGetlastrundate" FunctionName="DataLakeModel.Store.uspGetlastrundate" />
+          <EntitySetMapping Name="USCoastalMarineZones">
+            <EntityTypeMapping TypeName="DataLakeModel.USCoastalMarineZone">
+              <MappingFragment StoreEntitySet="USCoastalMarineZones">
+                <ScalarProperty Name="Geom" ColumnName="Geom" />
+                <ScalarProperty Name="ShapeArea" ColumnName="ShapeArea" />
+                <ScalarProperty Name="ShapeLength" ColumnName="ShapeLength" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="AJOIN1" ColumnName="AJOIN1" />
+                <ScalarProperty Name="AJOIN0" ColumnName="AJOIN0" />
+                <ScalarProperty Name="LocationNAME" ColumnName="LocationNAME" />
+                <ScalarProperty Name="GL_WFO" ColumnName="GL_WFO" />
+                <ScalarProperty Name="WFO" ColumnName="WFO" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USStates">
+            <EntityTypeMapping TypeName="DataLakeModel.USState">
+              <MappingFragment StoreEntitySet="USStates">
+                <ScalarProperty Name="Geom" ColumnName="Geom" />
+                <ScalarProperty Name="ShapeArea" ColumnName="ShapeArea" />
+                <ScalarProperty Name="ShapeLeng" ColumnName="ShapeLeng" />
+                <ScalarProperty Name="LATITUDE" ColumnName="LATITUDE" />
+                <ScalarProperty Name="LONGITUDE" ColumnName="LONGITUDE" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="STATENAME" ColumnName="STATENAME" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="OBJECTID" ColumnName="OBJECTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USZipCodes">
+            <EntityTypeMapping TypeName="DataLakeModel.USZipCode">
+              <MappingFragment StoreEntitySet="USZipCodes">
+                <ScalarProperty Name="Geom" ColumnName="Geom" />
+                <ScalarProperty Name="AWATER10" ColumnName="AWATER10" />
+                <ScalarProperty Name="ALAND10" ColumnName="ALAND10" />
+                <ScalarProperty Name="ZIPCODE" ColumnName="ZIPCODE" />
+                <ScalarProperty Name="GEOID10" ColumnName="GEOID10" />
+                <ScalarProperty Name="AFFGEOID10" ColumnName="AFFGEOID10" />
+                <ScalarProperty Name="ZCTA5CE10" ColumnName="ZCTA5CE10" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DatasetLogs">
+            <EntityTypeMapping TypeName="DataLakeModel.DatasetLog">
+              <MappingFragment StoreEntitySet="DatasetLog">
+                <ScalarProperty Name="LogDescription" ColumnName="LogDescription" />
+                <ScalarProperty Name="IsComplete" ColumnName="IsComplete" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="LastRunDate" ColumnName="LastRunDate" />
+                <ScalarProperty Name="DatasetURL" ColumnName="DatasetURL" />
+                <ScalarProperty Name="DatasetName" ColumnName="DatasetName" />
+                <ScalarProperty Name="LogId" ColumnName="LogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherDataCategories">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherDataCategory">
+              <MappingFragment StoreEntitySet="WeatherDataCategories">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="DataCatagoryId" ColumnName="DataCatagoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherDatasets">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherDataset">
+              <MappingFragment StoreEntitySet="WeatherDatasets">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="attributes" ColumnName="attributes" />
+                <ScalarProperty Name="stations" ColumnName="stations" />
+                <ScalarProperty Name="Datatype" ColumnName="Datatype" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AllDatasetId" ColumnName="AllDatasetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherDatasetTypes">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherDatasetType">
+              <MappingFragment StoreEntitySet="WeatherDatasetTypes">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="datacoverage" ColumnName="datacoverage" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="maxdate" ColumnName="maxdate" />
+                <ScalarProperty Name="mindate" ColumnName="mindate" />
+                <ScalarProperty Name="uid" ColumnName="uid" />
+                <ScalarProperty Name="DatasetId" ColumnName="DatasetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherDataTypes">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherDataType">
+              <MappingFragment StoreEntitySet="WeatherDataTypes">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="datacoverage" ColumnName="datacoverage" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="maxdate" ColumnName="maxdate" />
+                <ScalarProperty Name="mindate" ColumnName="mindate" />
+                <ScalarProperty Name="DataTypeId" ColumnName="DataTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherLocationCategories">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherLocationCategory">
+              <MappingFragment StoreEntitySet="WeatherLocationCategories">
+                <ScalarProperty Name="Checksumcheck" ColumnName="Checksumcheck" />
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="LocationCatagoryId" ColumnName="LocationCatagoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherLocations">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherLocation">
+              <MappingFragment StoreEntitySet="WeatherLocations">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="datacoverage" ColumnName="datacoverage" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="maxdate" ColumnName="maxdate" />
+                <ScalarProperty Name="mindate" ColumnName="mindate" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WeatherStations">
+            <EntityTypeMapping TypeName="DataLakeModel.WeatherStation">
+              <MappingFragment StoreEntitySet="WeatherStations">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="elevationUnit" ColumnName="elevationUnit" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="datacoverage" ColumnName="datacoverage" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="maxdate" ColumnName="maxdate" />
+                <ScalarProperty Name="mindate" ColumnName="mindate" />
+                <ScalarProperty Name="elevation" ColumnName="elevation" />
+                <ScalarProperty Name="StationId" ColumnName="StationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeatureGeoLocationInfoes">
+            <EntityTypeMapping TypeName="DataLakeModel.FeatureGeoLocationInfo">
+              <MappingFragment StoreEntitySet="FeatureGeoLocationInfo">
+                <ScalarProperty Name="Datareference" ColumnName="Datareference" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+                <ScalarProperty Name="GeoServeId" ColumnName="GeoServeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeatureGeoServeInfoes">
+            <EntityTypeMapping TypeName="DataLakeModel.FeatureGeoServeInfo">
+              <MappingFragment StoreEntitySet="FeatureGeoServeInfo">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="GeoServeCodeId" ColumnName="GeoServeCodeId" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="IdentificationCode" ColumnName="IdentificationCode" />
+                <ScalarProperty Name="GeoServeId" ColumnName="GeoServeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeatureInfoes">
+            <EntityTypeMapping TypeName="DataLakeModel.FeatureInfo">
+              <MappingFragment StoreEntitySet="FeatureInfo">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="AlertLevel" ColumnName="AlertLevel" />
+                <ScalarProperty Name="USGEventPageUrl" ColumnName="USGEventPageUrl" />
+                <ScalarProperty Name="HumanReviewedStatus" ColumnName="HumanReviewedStatus" />
+                <ScalarProperty Name="TypeOfSeismicEvent" ColumnName="TypeOfSeismicEvent" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="RmsTravelTime" ColumnName="RmsTravelTime" />
+                <ScalarProperty Name="HorizontalDistance" ColumnName="HorizontalDistance" />
+                <ScalarProperty Name="NumOfSeismicStations" ColumnName="NumOfSeismicStations" />
+                <ScalarProperty Name="CommaSeparatedProductTypes" ColumnName="CommaSeparatedProductTypes" />
+                <ScalarProperty Name="CommaSeparatedSourceNetworkIds" ColumnName="CommaSeparatedSourceNetworkIds" />
+                <ScalarProperty Name="PreferredSourceNetworkId" ColumnName="PreferredSourceNetworkId" />
+                <ScalarProperty Name="Significancy" ColumnName="Significancy" />
+                <ScalarProperty Name="TsunamiFlag" ColumnName="TsunamiFlag" />
+                <ScalarProperty Name="MaxInstrumentalIntesity" ColumnName="MaxInstrumentalIntesity" />
+                <ScalarProperty Name="NumOfFeltReported" ColumnName="NumOfFeltReported" />
+                <ScalarProperty Name="ComputedFeltIntesity" ColumnName="ComputedFeltIntesity" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="TimeZoneOffset" ColumnName="TimeZoneOffset" />
+                <ScalarProperty Name="LastUpdatedDateTime" ColumnName="LastUpdatedDateTime" />
+                <ScalarProperty Name="EventDateTime" ColumnName="EventDateTime" />
+                <ScalarProperty Name="LastUpdatedInMS" ColumnName="LastUpdatedInMS" />
+                <ScalarProperty Name="TimeInMS" ColumnName="TimeInMS" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+                <ScalarProperty Name="Magnitude" ColumnName="Magnitude" />
+                <ScalarProperty Name="IdentificationCode" ColumnName="IdentificationCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SummaryInfoes">
+            <EntityTypeMapping TypeName="DataLakeModel.SummaryInfo">
+              <MappingFragment StoreEntitySet="SummaryInfo">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="DataLoaded" ColumnName="DataLoaded" />
+                <ScalarProperty Name="ToDateTime" ColumnName="ToDateTime" />
+                <ScalarProperty Name="FromDateTime" ColumnName="FromDateTime" />
+                <ScalarProperty Name="SummaryId" ColumnName="SummaryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeatureGeometryInfoes">
+            <EntityTypeMapping TypeName="DataLakeModel.FeatureGeometryInfo">
+              <MappingFragment StoreEntitySet="FeatureGeometryInfo">
+                <ScalarProperty Name="DataReference" ColumnName="DataReference" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Depth" ColumnName="Depth" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="IdentificationCode" ColumnName="IdentificationCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherDatasetTypesData" FunctionName="DataLakeModel.Store.uspInsertWeatherDatasetTypesData" />
+          <FunctionImportMapping FunctionImportName="uspInsertWeatherLocationCategoriesData" FunctionName="DataLakeModel.Store.uspInsertWeatherLocationCategoriesData" />
+          <FunctionImportMapping FunctionImportName="uspInsertDatalog" FunctionName="DataLakeModel.Store.uspInsertDatalog" />
+          <FunctionImportMapping FunctionImportName="uspGetallStormdatasets" FunctionName="DataLakeModel.Store.uspGetallStormdatasets" />
+          <FunctionImportMapping FunctionImportName="uspInsertWarningData" FunctionName="DataLakeModel.Store.uspInsertWarningData" />
+          <FunctionImportMapping FunctionImportName="uspinsertFeatureGeoLocationInfo" FunctionName="DataLakeModel.Store.uspinsertFeatureGeoLocationInfo" />
+          <FunctionImportMapping FunctionImportName="uspinsertfeaturegeometryinfo" FunctionName="DataLakeModel.Store.uspinsertfeaturegeometryinfo" />
+          <FunctionImportMapping FunctionImportName="uspinsertFeatureGeoServeInfo" FunctionName="DataLakeModel.Store.uspinsertFeatureGeoServeInfo" />
+          <FunctionImportMapping FunctionImportName="uspinsertfeatureinfo" FunctionName="DataLakeModel.Store.uspinsertfeatureinfo" />
+          <FunctionImportMapping FunctionImportName="GetmaxGeoServeId" FunctionName="DataLakeModel.Store.GetmaxGeoServeId" />
+          <FunctionImportMapping FunctionImportName="GetmaxGeoServeIdlOCATION" FunctionName="DataLakeModel.Store.GetmaxGeoServeIdlOCATION" />
+          <FunctionImportMapping FunctionImportName="uspInsertWorkflowRun" FunctionName="DataLakeModel.Store.uspInsertWorkflowRun" />
+          <FunctionImportMapping FunctionImportName="uspInsertWorkflowLog" FunctionName="DataLakeModel.Store.uspInsertWorkflowLog" />
+          <FunctionImportMapping FunctionImportName="uspUpdateWorkflowRun" FunctionName="DataLakeModel.Store.uspUpdateWorkflowRun" />
+          <FunctionImportMapping FunctionImportName="uspGetLogParameter" FunctionName="DataLakeModel.Store.uspGetLogParameter">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.uspGetLogParameter_Result">
+                <ScalarProperty Name="WorkFlowRunID" ColumnName="WorkFlowRunID" />
+                <ScalarProperty Name="WorkflowTaskID" ColumnName="WorkflowTaskID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetWorkFlowParameter" FunctionName="DataLakeModel.Store.uspGetWorkFlowParameter">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.uspGetWorkFlowParameter_Result">
+                <ScalarProperty Name="WorkflowTaskId" ColumnName="WorkflowTaskId" />
+                <ScalarProperty Name="WorkflowDefinationID" ColumnName="WorkflowDefinationID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="WorkflowDefinitions">
+            <EntityTypeMapping TypeName="DataLakeModel.WorkflowDefinition">
+              <MappingFragment StoreEntitySet="WorkflowDefinition">
+                <ScalarProperty Name="WorkflowDefinitionGUID" ColumnName="WorkflowDefinitionGUID" />
+                <ScalarProperty Name="IsScheduled" ColumnName="IsScheduled" />
+                <ScalarProperty Name="IsSingleton" ColumnName="IsSingleton" />
+                <ScalarProperty Name="ScheduleJSON" ColumnName="ScheduleJSON" />
+                <ScalarProperty Name="EndBefore" ColumnName="EndBefore" />
+                <ScalarProperty Name="StartAfter" ColumnName="StartAfter" />
+                <ScalarProperty Name="IsEnabled" ColumnName="IsEnabled" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WorkflowDefinitionID" ColumnName="WorkflowDefinitionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkflowLogs">
+            <EntityTypeMapping TypeName="DataLakeModel.WorkflowLog">
+              <MappingFragment StoreEntitySet="WorkflowLog">
+                <ScalarProperty Name="ExceptionJSON" ColumnName="ExceptionJSON" />
+                <ScalarProperty Name="ExceptionType" ColumnName="ExceptionType" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="LogLevel" ColumnName="LogLevel" />
+                <ScalarProperty Name="WorkflowTaskID" ColumnName="WorkflowTaskID" />
+                <ScalarProperty Name="WorkflowRunID" ColumnName="WorkflowRunID" />
+                <ScalarProperty Name="WorkflowLogID" ColumnName="WorkflowLogID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkflowRuns">
+            <EntityTypeMapping TypeName="DataLakeModel.WorkflowRun">
+              <MappingFragment StoreEntitySet="WorkflowRun">
+                <ScalarProperty Name="RunGUID" ColumnName="RunGUID" />
+                <ScalarProperty Name="CutoffDateTime" ColumnName="CutoffDateTime" />
+                <ScalarProperty Name="CutoffValue" ColumnName="CutoffValue" />
+                <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+                <ScalarProperty Name="CompletedOn" ColumnName="CompletedOn" />
+                <ScalarProperty Name="StartedOn" ColumnName="StartedOn" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="WorkflowDefinitionID" ColumnName="WorkflowDefinitionID" />
+                <ScalarProperty Name="WorkflowRunID" ColumnName="WorkflowRunID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkflowTasks">
+            <EntityTypeMapping TypeName="DataLakeModel.WorkflowTask">
+              <MappingFragment StoreEntitySet="WorkflowTask">
+                <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
+                <ScalarProperty Name="TaskType" ColumnName="TaskType" />
+                <ScalarProperty Name="StepNumber" ColumnName="StepNumber" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WorkflowDefinitionID" ColumnName="WorkflowDefinitionID" />
+                <ScalarProperty Name="WorkflowTaskID" ColumnName="WorkflowTaskID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkflowTaskParameters">
+            <EntityTypeMapping TypeName="DataLakeModel.WorkflowTaskParameter">
+              <MappingFragment StoreEntitySet="WorkflowTaskParameter">
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="ConfigurationValue" ColumnName="ConfigurationValue" />
+                <ScalarProperty Name="ConfigurationKey" ColumnName="ConfigurationKey" />
+                <ScalarProperty Name="WorkflowTaskID" ColumnName="WorkflowTaskID" />
+                <ScalarProperty Name="WorkflowTaskParameterID" ColumnName="WorkflowTaskParameterID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DataLakeModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="DataLakeModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="CodeDescription" ColumnName="CodeDescription" />
+                <ScalarProperty Name="CodeShortDescription" ColumnName="CodeShortDescription" />
+                <ScalarProperty Name="StatausCode" ColumnName="StatausCode" />
+                <ScalarProperty Name="CodeTable" ColumnName="CodeTable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TableMetadatas">
+            <EntityTypeMapping TypeName="DataLakeModel.TableMetadata">
+              <MappingFragment StoreEntitySet="TableMetadata">
+                <ScalarProperty Name="ColumnDescription" ColumnName="ColumnDescription" />
+                <ScalarProperty Name="IsNullable" ColumnName="IsNullable" />
+                <ScalarProperty Name="Scale" ColumnName="Scale" />
+                <ScalarProperty Name="Precision" ColumnName="Precision" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="ColumnName" ColumnName="ColumnName" />
+                <ScalarProperty Name="TableName" ColumnName="TableName" />
+                <ScalarProperty Name="SchemaName" ColumnName="SchemaName" />
+                <ScalarProperty Name="MetadataKey" ColumnName="MetadataKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetWorkFlowServiceURL" FunctionName="DataLakeModel.Store.GetWorkFlowServiceURL">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.GetWorkFlowServiceURL_Result2">
+                <ScalarProperty Name="ServiceURL" ColumnName="ServiceURL" />
+                <ScalarProperty Name="WorkflowTaskId" ColumnName="WorkflowTaskId" />
+                <ScalarProperty Name="WorkflowDefinitionID" ColumnName="WorkflowDefinitionID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetWorkFlowURLParameter" FunctionName="DataLakeModel.Store.GetWorkFlowURLParameter">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.GetWorkFlowURLParameter_Result">
+                <ScalarProperty Name="ConfigurationKey" ColumnName="ConfigurationKey" />
+                <ScalarProperty Name="ConfigurationValue" ColumnName="ConfigurationValue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetMasterData" FunctionName="DataLakeModel.Store.uspGetMasterData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.uspGetMasterData_Result">
+                <ScalarProperty Name="WorkflowDefinitionID" ColumnName="WorkflowDefinitionID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetWorkflowRunData" FunctionName="DataLakeModel.Store.uspGetWorkflowRunData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.uspGetWorkflowRunData_Result">
+                <ScalarProperty Name="CodeShortDescription" ColumnName="CodeShortDescription" />
+                <ScalarProperty Name="Startedon" ColumnName="Startedon" />
+                <ScalarProperty Name="CompletedOn" ColumnName="CompletedOn" />
+                <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+                <ScalarProperty Name="CutoffDateTime" ColumnName="CutoffDateTime" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspGetWorkflowLogData" FunctionName="DataLakeModel.Store.uspGetWorkflowLogData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DataLakeModel.uspGetWorkflowLogData_Result">
+                <ScalarProperty Name="CodeShortDescription" ColumnName="CodeShortDescription" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
+                <ScalarProperty Name="ExceptionType" ColumnName="ExceptionType" />
+                <ScalarProperty Name="ExceptionJSON" ColumnName="ExceptionJSON" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

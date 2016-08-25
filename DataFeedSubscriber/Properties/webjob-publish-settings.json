@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "http://schemastore.org/schemas/json/webjob-publish-settings.json",
+  "webJobName": "DataFeedSubscriber",
+  "startTime": "2016-08-09T00:00:00+05:30",
+  "endTime": "2016-08-10T00:00:00+05:30",
+  "jobRecurrenceFrequency": "Hour",
+  "interval": 1,
+  "runMode": "Scheduled"
+}
